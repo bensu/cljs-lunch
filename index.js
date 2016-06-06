@@ -11,7 +11,7 @@ function slackRequest(text) {
 	      body: {
             text: text,
             username: "charlie-lunch",
-            channel: "#hooktest"
+            channel: "#general"
         },
 	      json: true
     }
@@ -19,16 +19,15 @@ function slackRequest(text) {
 
 function lunchSuggestion(date) {
     const today = date.getDay();
-    const restaurant = restaurants[today];
-    const text = "@here Hey guys, today we should eat at " + restaurant.name +
+    const restaurant = restaurants[today - 1];
+    const text = "Hey guys, today we should eat at " + restaurant.name +
           ": <" + restaurant.url + ">";
     return slackRequest(text);
 }
 
 var log = [];
 
-var CronJob = require('cron').CronJob;
-new CronJob('00 07 10 * * 1-5', function() {
+function makeSuggestion() {
     const date = new Date();
     request(lunchSuggestion(date), function(error, response, body) {
         if (!error && response.statusCode == 200) {
@@ -38,10 +37,13 @@ new CronJob('00 07 10 * * 1-5', function() {
             console.log("Failed for reasons...");
         }
     });
-}, null, true, 'America/Los_Angeles');
+}
+
+var CronJob = require('cron').CronJob;
+new CronJob('00 30 11 * * 1-5', makeSuggestion(), null, true, 'America/Los_Angeles');
 
 app.get('/', (req, res) => {
-    const date = new Date();
+    makeSuggestion();
     res.send("I've had some errors " + log.length);
 });
 app.listen(8888);
