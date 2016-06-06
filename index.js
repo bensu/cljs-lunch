@@ -1,6 +1,5 @@
-require("clojurescript/register")
 
-const config = require('config');
+const config = require('./config.json');
 
 const app = require('express')();
 
@@ -17,7 +16,7 @@ const restaurants = [
     },
     {
         "name": "Pancho Villa",
-        "type": "Mexican"
+        "type": "Mexican",
         "url": "https://www.orderaheadapp.com/places/pancho-villa-taqueria-san-francisco--san-francisco-ca"
     },
     {
@@ -30,4 +29,4 @@ const restaurants = [
 app.get('/', (req, res) => {
     res.send(config.SLACK_WEBHOOK_URL);
 });
-app.listen();
+app.listen(8888);
