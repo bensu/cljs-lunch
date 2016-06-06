@@ -1,5 +1,7 @@
 require("clojurescript/register")
 
+const config = require('config');
+
 const app = require('express')();
 
 const restaurants = [
@@ -26,6 +28,6 @@ const restaurants = [
 ];
 
 app.get('/', (req, res) => {
-    res.send("Lunch Bot");
+    res.send(config.SLACK_WEBHOOK_URL);
 });
 app.listen();
