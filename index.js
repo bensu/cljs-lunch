@@ -25,10 +25,23 @@ function lunchSuggestion(date) {
     return slackRequest(text);
 }
 
-app.get('/', (req, res) => {
+var log = [];
+
+var CronJob = require('cron').CronJob;
+new CronJob('00 07 10 * * 1-5', function() {
     const date = new Date();
     request(lunchSuggestion(date), function(error, response, body) {
-        res.send("I tried!");
+        if (!error && response.statusCode == 200) {
+            console.log("Sent the request");
+        } else {
+            log.push(error);
+            console.log("Failed for reasons...");
+        }
     });
+}, null, true, 'America/Los_Angeles');
+
+app.get('/', (req, res) => {
+    const date = new Date();
+    res.send("I've had some errors " + log.length);
 });
 app.listen(8888);
