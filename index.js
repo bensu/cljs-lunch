@@ -40,10 +40,10 @@ function makeSuggestion() {
 }
 
 var CronJob = require('cron').CronJob;
-new CronJob('00 30 11 * * 1-5', makeSuggestion(), null, true, 'America/Los_Angeles');
+new CronJob('00 30 11 * * 1-5', makeSuggestion, null, true, 'America/Los_Angeles');
 
 app.get('/', (req, res) => {
-    // makeSuggestion();
+    makeSuggestion();
     res.send("I've had some errors " + log.length);
 });
 app.listen(8888);
